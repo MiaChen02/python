@@ -1,0 +1,24 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import warnings
+%matplotlib inline
+warnings.simplefilter(action='ignore')
+inputfile='D:/Postgraduate/WARWICK/CSP/PMA/'
+df=pd.read_csv(inputfile+'music_audio_data.csv')
+#df['label_num']=0
+#df['label_num']=np.where(df['label']=='blues',1,np.where(df['label']=='classical',2,np.where(df['label']=='country',3,np.where(df['label']=='disco',4,np.where(df['label']=='hiphop',5,np.where(df['label']=='jazz',6,np.where(df['label']=='metal',7,np.where(df['label']=='pop',8,np.where(df['label']=='reggae',9,10)))))))))
+df.head()
+
+#提取列名，删掉了Unnamed: 0, filename, label
+features=df.columns.values.tolist()
+del features[-1]
+del features[0:2]
+
+x=df.drop(['Unnamed: 0','filename','label'],axis=1)
+y=df.loc[:,['label']].values
+#标准化
+x=StandardScaler().fit_transform(x)
+pd.DataFrame(data = x, columns = features).head()
