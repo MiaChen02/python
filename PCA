@@ -22,3 +22,42 @@ y=df.loc[:,['label']].values
 #标准化
 x=StandardScaler().fit_transform(x)
 pd.DataFrame(data = x, columns = features).head()
+
+
+pca = PCA(n_components=56)
+principalComponents = pca.fit_transform(x)
+pca.explained_variance_ratio_
+
+# 进行可视化，选择特征
+importance = pca.explained_variance_ratio_
+plt.scatter(range(1,57),importance)
+plt.plot(range(1,57),importance)
+plt.title('Scree Plot')
+plt.xlabel('Factors')
+plt.ylabel('Eigenvalue')
+plt.grid()
+plt.show()
+
+# 进行降维
+pca = PCA(n_components=5)
+principalComponents = pca.fit_transform(x)
+# 查看降维后的数据
+principalDf = pd.DataFrame(data=principalComponents, columns=['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4', 'principal component 5'])
+finalDf = pd.concat([principalDf, df[['label']]], axis = 1)
+finalDf.head(5)
+
+pca.components_
+
+(np.dot(x[0],pca.components_[0]), np.dot(x[0],pca.components_[1]), np.dot(x[0],pca.components_[2]), np.dot(x[0],pca.components_[3]), np.dot(x[0],pca.components_[4]))
+
+# 对系数进行可视化
+import seaborn as sns
+df_cm = pd.DataFrame(np.abs(pca.components_), columns=features)
+plt.figure(figsize = (12,6))
+ax = sns.heatmap(df_cm, annot=True, cmap="BuPu")
+# 设置y轴的字体的大小
+ax.yaxis.set_tick_params(labelsize=15)
+ax.xaxis.set_tick_params(labelsize=15)
+plt.title('PCA', fontsize='xx-large')
+# Set y-axis label
+plt.savefig('factorAnalysis.png', dpi=200)
